@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".UpdatePageActivity"
+    android:background="@drawable/back">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Loading..."
+            android:textAppearance="@style/TextAppearance.AppCompat.Headline"
+            android:textColor="@color/purple_700"
+            android:gravity="center"
+            android:layout_marginTop="50dp"
+            android:id="@+id/textView_welcome"/>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/border"
+            android:id="@+id/info_layout"
+            android:layout_marginTop="50dp"
+            android:layout_marginStart="30dp"
+            android:layout_marginEnd="30dp"
+            android:padding="15dp">
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:id="@+id/editText_update_name"
+                android:hint="Loading..."
+                android:background="@drawable/border"
+                android:layout_marginTop="30dp"
+                android:layout_marginStart="30dp"
+                android:layout_marginEnd="30dp"
+                android:padding="5dp"
+                android:inputType="text"/>
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:id="@+id/editText_update_email"
+                android:hint="Loading..."
+                android:background="@drawable/border"
+                android:layout_below="@id/editText_update_name"
+                android:layout_marginTop="30dp"
+                android:layout_marginStart="30dp"
+                android:layout_marginEnd="30dp"
+                android:padding="5dp"
+                android:inputType="textEmailAddress"/>
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:id="@+id/editText_update_pwd"
+                android:hint="Loading..."
+                android:background="@drawable/border"
+                android:layout_below="@id/editText_update_email"
+                android:layout_marginTop="30dp"
+                android:layout_marginStart="30dp"
+                android:layout_marginEnd="30dp"
+                android:padding="5dp"
+                android:inputType="textPassword"/>
+
+        </RelativeLayout>
+
+        <Button
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/editText_update_pwd"
+            android:id="@+id/button_updatePage_update"
+            android:backgroundTint="@color/purple_700"
+            android:textColor="@color/white"
+            android:layout_marginTop="20dp"
+            android:layout_gravity="center"
+            android:text="Update"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColorHint="@color/purple_700"
+            android:hint="Loading..."
+            android:layout_below="@id/button_update"
+            android:gravity="center"
+            android:id="@+id/textView_show_register_date"/>
+
+        <ProgressBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@id/progressBar"
+            android:layout_below="@id/button_update"
+            android:layout_gravity="center"
+            android:elevation="10dp"
+            style="?android:attr/progressBarStyleLarge"
+            android:indeterminateTint="@color/purple_700"
+            android:visibility="gone"/>
+
+
+
+    </LinearLayout>
+
+</ScrollView >

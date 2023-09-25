@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity2"
+    android:background="@drawable/back">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/textView_app_name"
+            android:text="Mobile Apps Period 2 2023-2024"
+            android:textColor="@color/purple_700"
+            android:textAppearance="@style/TextAppearance.AppCompat.Headline"
+            android:gravity="center"
+            android:layout_marginTop="50dp" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:id="@+id/imageView_Logo"
+            android:src="@drawable/logo"
+            android:maxWidth="200dp"
+            android:adjustViewBounds="true"
+            android:layout_marginTop="75dp"
+            android:elevation="10dp"
+            android:layout_gravity="center"/>
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:background="@drawable/border"
+            android:layout_marginStart="30dp"
+            android:layout_marginEnd="30dp"
+            android:layout_marginTop="10dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/textView_main_head"
+                android:textColor="@color/purple_700"
+                android:text="Welcome to Mobile Apps Period 2"
+                android:gravity="center"
+                android:textAppearance="@style/TextAppearance.AppCompat.Menu"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"/>
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:id="@+id/editText_login_email"
+                android:hint="Email"
+                android:layout_below="@id/textView_main_head"
+                android:layout_marginTop="30dp"
+                android:layout_marginStart="30dp"
+                android:layout_marginEnd="30dp"
+                android:padding="5dp"
+                android:inputType="textEmailAddress"/>
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:id="@+id/editText_login_pwd"
+                android:hint="Password"
+                android:layout_below="@id/editText_login_email"
+                android:layout_marginTop="30dp"
+                android:layout_marginStart="30dp"
+                android:layout_marginEnd="30dp"
+                android:padding="5dp"
+                android:inputType="textPassword"/>
+
+            <ImageView
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:id="@+id/imageView_show_hide_pwd"
+                android:layout_below="@id/editText_login_email"
+                android:layout_marginTop="33dp"
+                android:layout_alignParentRight="true"
+                android:layout_marginEnd="30dp"/>
+
+            <Button
+                android:layout_width="250dp"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/editText_login_pwd"
+                android:id="@+id/button_login"
+                android:backgroundTint="@color/purple_200"
+                android:textColor="@color/white"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="20dp"
+                android:text="Login"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/textView_Register"
+                android:layout_below="@id/button_login"
+                android:text="Not a user yet?"
+                android:gravity="center"
+                android:layout_marginTop="15dp"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/textView_link_Register"
+                android:layout_below="@id/textView_Register"
+                android:text="Sign Up Now!"
+                android:gravity="center"
+                android:layout_marginTop="15dp"
+                android:textColor="@color/dark_blue"/>
+
+            <ProgressBar
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/progressBar"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                style="?android:attr/progressBarStyleLarge"
+                android:indeterminateTint="@color/purple_700"
+                android:elevation="10dp"
+                android:visibility="gone"/>
+
+
+
+
+        </RelativeLayout>
+
+    </LinearLayout>
+
+
+</ScrollView>
