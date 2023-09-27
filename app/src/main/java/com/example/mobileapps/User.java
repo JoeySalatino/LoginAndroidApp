@@ -12,11 +12,16 @@ public class User {
         password = "";
     }
 
-    public User(String userName, String email){ //alternate constructor
+    public User(String userName, String email, String password){ //alternate constructor
         this.userName = userName;
         this.email = email;
+        this.password = password;
         ID++;
     }
 
     public int getID(){return ID;}//accessor method
+
+    public String getPassword(){
+        return password;
+    }
 }

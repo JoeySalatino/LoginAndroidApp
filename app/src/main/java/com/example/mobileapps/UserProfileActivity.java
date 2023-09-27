@@ -17,6 +17,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.FirebaseUserMetadata;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -34,6 +35,7 @@ public class UserProfileActivity extends AppCompatActivity {
         setContentView(R.layout.activity_user_profile);
         getSupportActionBar().setTitle("Home");
         auth = FirebaseAuth.getInstance();
+        database = FirebaseDatabase.getInstance().getReference();
         findViews();
         signOut();
         update();
@@ -62,7 +64,7 @@ public class UserProfileActivity extends AppCompatActivity {
         String email = firebaseUser.getEmail();
         textViewEmail.setText(email);
         //String welcome = getResources().getString(R.string.welcome_user);
-        //textViewWelcome.setText(welcome);
+        //textViewWelcome.setHint(welcome);
         //textViewRegisterDate.setText(registerDate);
         progressBar.setVisibility(View.GONE);
     }

@@ -21,6 +21,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.FirebaseUserMetadata;
 import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -31,7 +32,6 @@ public class UpdatePageActivity extends AppCompatActivity {
     private TextView editTextWelcome;
     private ProgressBar progressBar;
     private FirebaseAuth auth;
-    private User user;
     private DatabaseReference database;
 
     @Override
@@ -41,20 +41,13 @@ public class UpdatePageActivity extends AppCompatActivity {
         getSupportActionBar().setTitle("Update Profile");
         auth = FirebaseAuth.getInstance();
         FirebaseUser firebaseUser = auth.getCurrentUser();
+        database = FirebaseDatabase.getInstance().getReference();
         findViews();
         setUserInfo(firebaseUser);
         updateButton();
     }
 
-    private void setUserInfo(FirebaseUser firebaseUser) {
-        String name = firebaseUser.getDisplayName();
-        String email = firebaseUser.getEmail();
-        editTextUpdateName.setText(name);
-        editTextUpdateName.setText(name);
-        editTextUpdateEmail.setText(email);
-        editTextUpdatePassword.setText("Password");
-        progressBar.setVisibility(View.GONE);
-    }
+
 
     private void updateButton() {
         Button buttonUpdate = findViewById(R.id.button_updatePage_update);
@@ -70,7 +63,8 @@ public class UpdatePageActivity extends AppCompatActivity {
                     editTextUpdatePassword.requestFocus();
                 }else{
                     progressBar.setVisibility(View.VISIBLE);
-                    updateUser(textEmail, textName, textPassword);
+                    updateUserAuthentication(textEmail, textName, textPassword);
+                    updateUserDatabase(textName,textEmail,textPassword);
             }
                 Intent userUpdateButton = new Intent(UpdatePageActivity.this, UserProfileActivity.class);
                 startActivity(userUpdateButton);
@@ -79,10 +73,10 @@ public class UpdatePageActivity extends AppCompatActivity {
         });
     }
 
-    private void updateUser(String textEmail, String textName, String textPassword) {
+    private void updateUserAuthentication(String textEmail, String textName, String textPassword) {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         UserProfileChangeRequest profileUpdateName = new UserProfileChangeRequest.Builder().setDisplayName(textName).build();
-                user.updateProfile(profileUpdateName).addOnCompleteListener(new OnCompleteListener<Void>() {
+        user.updateProfile(profileUpdateName).addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
                         if (task.isSuccessful()) {
@@ -98,7 +92,30 @@ public class UpdatePageActivity extends AppCompatActivity {
                         }
                     }
                 });
+        user.updatePassword(textPassword).addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()) {
+                            Toast.makeText(UpdatePageActivity.this, "User Profile Updated", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+        }
+
+        public void updateUserDatabase(String textName, String textEmail, String textPassword){
+            database.child("users").child("username").setValue(textName);
+            database.child("users").child("email").setValue(textEmail);
+            database.child("users").child("password").setValue(textPassword);
+        }
+
+
+    private void setUserInfo(FirebaseUser firebaseUser) {
+        database.child("users").child(firebaseUser.getUid()).child("password").setValue(editTextUpdatePassword.getText().toString());
+        database.child("users").child(firebaseUser.getUid()).child("password").setValue(editTextUpdatePassword.getText().toString());
+        database.child("users").child(firebaseUser.getUid()).child("password").setValue(editTextUpdatePassword.getText().toString());
     }
+
+
 
     private void findViews() {
         editTextUpdateName = findViewById(R.id.editText_update_name);
