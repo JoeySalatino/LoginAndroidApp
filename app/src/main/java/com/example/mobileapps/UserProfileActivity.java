@@ -1,5 +1,6 @@
 package com.example.mobileapps;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -16,8 +17,11 @@ import com.example.mobileapps.UpdatePageActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.FirebaseUserMetadata;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -37,36 +41,32 @@ public class UserProfileActivity extends AppCompatActivity {
         auth = FirebaseAuth.getInstance();
         database = FirebaseDatabase.getInstance().getReference();
         findViews();
+        FirebaseUser firebaseUser = auth.getCurrentUser();
+        showUserProfile1(firebaseUser);
         signOut();
         update();
-        //show profile details if the user is not null
-        FirebaseUser firebaseUser = auth.getCurrentUser();
-        if(firebaseUser != null) {
-            progressBar.setVisibility(View.VISIBLE);
-            showUserProfile(firebaseUser);
-        } else {
-            Toast.makeText(UserProfileActivity.this, "user not found", Toast.LENGTH_SHORT).show();
-        }
     }
-
-    private void showUserProfile(FirebaseUser firebaseUser) {
-        //to obtain metadata about the user object
-        FirebaseUserMetadata metadata = firebaseUser.getMetadata();
-        //grab the register date of the user
-        long registerTimeStamp = metadata.getCreationTimestamp();
-        String datePattern = "E, dd MMM yyy hh:mm a z"; //day, dd MMM yyy hh:mm AM/PM timezone
-        SimpleDateFormat sdf = new SimpleDateFormat(datePattern);
-        sdf.setTimeZone(TimeZone.getDefault());
-        String register = sdf.format(new Date(registerTimeStamp));
-        String registerDate = getResources().getString(R.string.user_since, register);
-        String name = firebaseUser.getDisplayName();
-        textViewName.setText(name);
-        String email = firebaseUser.getEmail();
-        textViewEmail.setText(email);
-        //String welcome = getResources().getString(R.string.welcome_user);
-        //textViewWelcome.setHint(welcome);
-        //textViewRegisterDate.setText(registerDate);
-        progressBar.setVisibility(View.GONE);
+    public void showUserProfile1(FirebaseUser firebaseUser){
+        database.child("users").child(firebaseUser.getUid()).child("Username").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                textViewName.setText(snapshot.getValue().toString());
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Toast.makeText(UserProfileActivity.this, "Error", Toast.LENGTH_SHORT).show();
+            }
+        });
+        database.child("users").child(firebaseUser.getUid()).child("Email").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                textViewEmail.setText(snapshot.getValue().toString());
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Toast.makeText(UserProfileActivity.this, "Couldnt update profile", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     private void signOut() {
@@ -98,10 +98,8 @@ public class UserProfileActivity extends AppCompatActivity {
     }
 
     private void findViews() {
-        textViewWelcome = findViewById(R.id.textView_welcome);
         textViewName = findViewById(R.id.textView_show_name);
         textViewEmail = findViewById(R.id.textView_show_email);
-        textViewRegisterDate = findViewById(R.id.textView_Register);
         progressBar = findViewById(R.id.progressBar);
     }
 }

@@ -1,7 +1,9 @@
 package com.example.mobileapps;
 
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -15,6 +17,7 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -24,12 +27,14 @@ import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+
 public class RegisterActivity extends AppCompatActivity {
     private EditText editTextRegisterEmail, editTextRegisterPwd, editTextRegisterFirstName, editTextRegisterLastName;
     private ProgressBar progressBar;
     private FirebaseAuth auth;
     private FirebaseUser firebaseUser;
     private DatabaseReference database;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,7 +79,6 @@ public class RegisterActivity extends AppCompatActivity {
                     firebaseUser = auth.getCurrentUser();
                 }
             }
-
             private void registerUser(String textEmail, String textFname, String textLname, String textPassword) {
                 auth = FirebaseAuth.getInstance();
                 auth.createUserWithEmailAndPassword(textEmail,textPassword).addOnCompleteListener(RegisterActivity.this, new OnCompleteListener<AuthResult>() {
@@ -90,7 +94,7 @@ public class RegisterActivity extends AppCompatActivity {
                             UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder().setDisplayName(textFname + textLname).build();
                             firebaseUser.updateProfile(profileUpdates);
                             Toast.makeText(RegisterActivity.this,"registration Successfull", Toast.LENGTH_SHORT).show();
-                            writeNewUser(textEmail,textFname,textPassword);
+                            writeNewUser(textEmail,textFname+textLname,textPassword);
                             //Open the UserProfileActivity after the user is created
                             Intent userProfileActivity = new Intent(RegisterActivity.this, UserProfileActivity.class);
                             //Stop the user from going back to the register screen
@@ -102,6 +106,7 @@ public class RegisterActivity extends AppCompatActivity {
                             try{
                                 throw task.getException();
 
+
                             }catch(Exception e){
                                 Toast.makeText(RegisterActivity.this,e.getMessage(),Toast.LENGTH_SHORT).show();
                             }
@@ -110,17 +115,18 @@ public class RegisterActivity extends AppCompatActivity {
                     }
                 });
 
+
             }
         });
     }
     private void writeNewUser(String textEmail, String textName, String textPassword) {
         User user = new User(textName,textEmail, textPassword);
+        firebaseUser = auth.getCurrentUser();
         database.child("users").child(""+user.getID());
         database.child("users").child(firebaseUser.getUid()).child("Username").setValue(textName);
         database.child("users").child(firebaseUser.getUid()).child("Email").setValue(textEmail);
         database.child("users").child(firebaseUser.getUid()).child("Password").setValue(textPassword);
     }
-
     private void showHidePwd() {
         ImageView imageViewShowHidePwd = findViewById(R.id.imageView_show_hide_pwd);
         imageViewShowHidePwd.setImageResource(R.drawable.visibility);
@@ -138,7 +144,6 @@ public class RegisterActivity extends AppCompatActivity {
             }
         });
     }
-
     private void findViews() {
         editTextRegisterEmail = findViewById(R.id.editText_register_email);
         editTextRegisterPwd = findViewById(R.id.editText_register_pwd);
