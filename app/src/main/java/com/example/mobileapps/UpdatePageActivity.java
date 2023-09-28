@@ -20,8 +20,11 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.FirebaseUserMetadata;
 import com.google.firebase.auth.UserProfileChangeRequest;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -51,6 +54,7 @@ public class UpdatePageActivity extends AppCompatActivity {
 
     private void updateButton() {
         Button buttonUpdate = findViewById(R.id.button_updatePage_update);
+        FirebaseUser firebaseUser = auth.getCurrentUser();
         buttonUpdate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -63,8 +67,8 @@ public class UpdatePageActivity extends AppCompatActivity {
                     editTextUpdatePassword.requestFocus();
                 }else{
                     progressBar.setVisibility(View.VISIBLE);
-                    updateUserAuthentication(textEmail, textName, textPassword);
-                    updateUserDatabase(textName,textEmail,textPassword);
+                    //updateUserAuthentication(textEmail, textName, textPassword);
+                    updateUserDatabase(firebaseUser);
             }
                 Intent userUpdateButton = new Intent(UpdatePageActivity.this, UserProfileActivity.class);
                 startActivity(userUpdateButton);
@@ -72,47 +76,43 @@ public class UpdatePageActivity extends AppCompatActivity {
             }
         });
     }
+    private void updateUserDatabase(FirebaseUser firebaseUser) {
+        database.child("users").child(firebaseUser.getUid()).child("Username").setValue(editTextUpdateName.getText().toString());
+        database.child("users").child(firebaseUser.getUid()).child("Email").setValue(editTextUpdateEmail.getText().toString());
+        database.child("users").child(firebaseUser.getUid()).child("Password").setValue(editTextUpdatePassword.getText().toString());
+    }
 
-    private void updateUserAuthentication(String textEmail, String textName, String textPassword) {
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        UserProfileChangeRequest profileUpdateName = new UserProfileChangeRequest.Builder().setDisplayName(textName).build();
-        user.updateProfile(profileUpdateName).addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        if (task.isSuccessful()) {
-                            Toast.makeText(UpdatePageActivity.this, "User Profile Updated", Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                });
-        user.updateEmail(textEmail).addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        if (task.isSuccessful()) {
-                            Toast.makeText(UpdatePageActivity.this, "User Profile Updated", Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                });
-        user.updatePassword(textPassword).addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        if (task.isSuccessful()) {
-                            Toast.makeText(UpdatePageActivity.this, "User Profile Updated", Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                });
-        }
-
-        public void updateUserDatabase(String textName, String textEmail, String textPassword){
-            database.child("users").child("username").setValue(textName);
-            database.child("users").child("email").setValue(textEmail);
-            database.child("users").child("password").setValue(textPassword);
-        }
-
-
-    private void setUserInfo(FirebaseUser firebaseUser) {
-        database.child("users").child(firebaseUser.getUid()).child("password").setValue(editTextUpdatePassword.getText().toString());
-        database.child("users").child(firebaseUser.getUid()).child("password").setValue(editTextUpdatePassword.getText().toString());
-        database.child("users").child(firebaseUser.getUid()).child("password").setValue(editTextUpdatePassword.getText().toString());
+    private void setUserInfo(FirebaseUser firebaseUser){
+        database.child("users").child(firebaseUser.getUid()).child("Username").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                editTextUpdateName.setText(snapshot.getValue().toString());
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Toast.makeText(UpdatePageActivity.this, "Couldnt update profile", Toast.LENGTH_SHORT).show();
+            }
+        });
+        database.child("users").child(firebaseUser.getUid()).child("Email").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                editTextUpdateEmail.setText(snapshot.getValue().toString());
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Toast.makeText(UpdatePageActivity.this, "Couldnt update profile", Toast.LENGTH_SHORT).show();
+            }
+        });
+        database.child("users").child(firebaseUser.getUid()).child("Password").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                editTextUpdatePassword.setText(snapshot.getValue().toString());
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Toast.makeText(UpdatePageActivity.this, "Couldnt update profile", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
 

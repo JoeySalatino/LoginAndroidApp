@@ -28,6 +28,7 @@ public class RegisterActivity extends AppCompatActivity {
     private EditText editTextRegisterEmail, editTextRegisterPwd, editTextRegisterFirstName, editTextRegisterLastName;
     private ProgressBar progressBar;
     private FirebaseAuth auth;
+    private FirebaseUser firebaseUser;
     private DatabaseReference database;
 
     @Override
@@ -38,7 +39,6 @@ public class RegisterActivity extends AppCompatActivity {
         database = FirebaseDatabase.getInstance().getReference();
         findViews();
         showHidePwd();
-
         Button ButtonRegister = findViewById(R.id.button_register);
         ButtonRegister.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -71,6 +71,7 @@ public class RegisterActivity extends AppCompatActivity {
                 }else{
                     progressBar.setVisibility(View.VISIBLE);
                     registerUser(textEmail, textFname, textLname, textPassword);
+                    firebaseUser = auth.getCurrentUser();
                 }
             }
 
@@ -112,9 +113,12 @@ public class RegisterActivity extends AppCompatActivity {
             }
         });
     }
-    private void writeNewUser(String textEmail, String textFname, String textPassword) {
-        User user = new User(textFname,textEmail, textPassword);
+    private void writeNewUser(String textEmail, String textName, String textPassword) {
+        User user = new User(textName,textEmail, textPassword);
         database.child("users").child(""+user.getID());
+        database.child("users").child(firebaseUser.getUid()).child("Username").setValue(textName);
+        database.child("users").child(firebaseUser.getUid()).child("Email").setValue(textEmail);
+        database.child("users").child(firebaseUser.getUid()).child("Password").setValue(textPassword);
     }
 
     private void showHidePwd() {
