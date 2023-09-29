@@ -68,10 +68,9 @@ public class UpdatePageActivity extends AppCompatActivity {
                     editTextUpdatePassword.requestFocus();
                 }else{
                     progressBar.setVisibility(View.VISIBLE);
-                    updateUserUsernameAuthentication(textName,firebaseUser);
-                    updateUserEmailAuthentication(textEmail,firebaseUser);
-                    updateUserPasswordAuthentication(textPassword,firebaseUser);
-                    updateUserDatabase(firebaseUser);
+                    updateUserEmailDatabase(firebaseUser,textEmail);
+                    updateUserPasswordDatabase(firebaseUser,textPassword);
+                    updateUserUsernameDatabase(firebaseUser,textPassword);
                 }
                 Intent userUpdateButton = new Intent(UpdatePageActivity.this, UserProfileActivity.class);
                 startActivity(userUpdateButton);
@@ -79,10 +78,17 @@ public class UpdatePageActivity extends AppCompatActivity {
             }
         });
     }
-    private void updateUserDatabase(FirebaseUser firebaseUser) {
-        database.child("users").child(firebaseUser.getUid()).child("Username").setValue(editTextUpdateName.getText().toString());
+    private void updateUserEmailDatabase(FirebaseUser firebaseUser,String textEmail) {
         database.child("users").child(firebaseUser.getUid()).child("Email").setValue(editTextUpdateEmail.getText().toString());
+        updateUserEmailAuthentication(textEmail);
+    }
+    private void updateUserUsernameDatabase(FirebaseUser firebaseUser,String textName) {
+        database.child("users").child(firebaseUser.getUid()).child("Username").setValue(editTextUpdateName.getText().toString());
+        updateUserUsernameAuthentication(textName);
+    }
+    private void updateUserPasswordDatabase(FirebaseUser firebaseUser,String textPassword) {
         database.child("users").child(firebaseUser.getUid()).child("Password").setValue(editTextUpdatePassword.getText().toString());
+        updateUserPasswordAuthentication(textPassword);
     }
     private void setUserInfo(FirebaseUser firebaseUser){
         database.child("users").child(firebaseUser.getUid()).child("Username").addValueEventListener(new ValueEventListener() {
@@ -116,9 +122,9 @@ public class UpdatePageActivity extends AppCompatActivity {
             }
         });
     }
-    private void updateUserUsernameAuthentication(String textName, FirebaseUser user) {
+    private void updateUserUsernameAuthentication(String textName) {
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder().setDisplayName(textName).build();
-        user.updateProfile(profileUpdates);
         user.updateProfile(profileUpdates).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
@@ -128,18 +134,20 @@ public class UpdatePageActivity extends AppCompatActivity {
             }
         });
     }
-    private void updateUserEmailAuthentication(String textEmail, FirebaseUser user) {
-        user.updateEmail(textEmail);
-        user.updateEmail(textEmail).addOnCompleteListener(new OnCompleteListener<Void>() {
-            @Override
-            public void onComplete(@NonNull Task<Void> task) {
-                if (task.isSuccessful()) {
-                    Toast.makeText(UpdatePageActivity.this, "Profile Updated", Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
+    private void updateUserEmailAuthentication(String textEmail) {
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        user.updateEmail(textEmail)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()) {
+                            Toast.makeText(UpdatePageActivity.this, "Profile Updated", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
     }
-    private void updateUserPasswordAuthentication(String textPassword, FirebaseUser user) {
+    private void updateUserPasswordAuthentication(String textPassword) {
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         user.updatePassword(textPassword);
         user.updatePassword(textPassword).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
